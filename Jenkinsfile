@@ -18,10 +18,9 @@ pipeline {
 
         withDockerContainer(image: "buildpack-deps:stretch-curl") {
           sh """
-          gpg --import private.key
-          for file in *; do
-            gpg --armor --detach-sign "$file"
-          done
+          set -e
+          gpg --import private.key && rm -f private.key
+          find . -type f | xargs -I{} gpg --armor --detach-sign {}
           """
         }
       }
