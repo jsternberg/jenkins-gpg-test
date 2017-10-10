@@ -20,13 +20,17 @@ pipeline {
         withDockerContainer(image: "jsternberg/jenkins-gpg-signer") {
           sh """
           ls -l
+          date
           sleep 5
+          date
           if ! gpg --import private.key; then
             echo "there was some problem importing the private key"
           else
             echo "imported the private key"
           fi
+          date
           sleep 5
+          date
           echo \$?
           gpg --list-secret-keys
           rm -f private.key
