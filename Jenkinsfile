@@ -8,7 +8,7 @@ pipeline {
       }
 
       steps {
-        sh "echo ${GPG_PRIVATE_KEY_FILE}"
+        sh "echo ${GPG_PRIVATE_KEY_FILE}; cat ${GPG_PRIVATE_KEY_FILE}"
         withDockerContainer(image: "buildpack-deps:stretch-curl") {
           sh """
           gpg --import "${GPG_PRIVATE_KEY_FILE}"
