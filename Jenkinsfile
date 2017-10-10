@@ -8,10 +8,17 @@ pipeline {
       }
 
       steps {
-        sh "echo ${GPG_PRIVATE_KEY_FILE}; cat ${GPG_PRIVATE_KEY_FILE}"
+        sh """
+        if [ ! -e private.key ]; then
+          touch private.key
+          chmod 600 private.key
+        fi
+        cat "${GPG_PRIVATE_KEY_FILE}" > private.key
+        """
+
         withDockerContainer(image: "buildpack-deps:stretch-curl") {
           sh """
-          gpg --import "${GPG_PRIVATE_KEY_FILE}"
+          gpg --import private.key
           for file in *; do
             gpg --armor --detach-sign "$file"
           done
@@ -20,6 +27,10 @@ pipeline {
       }
 
       post {
+        always {
+          sh "rm -f private.key"
+        }
+
         success {
           archiveArtifacts(artifacts: "*.asc")
         }
