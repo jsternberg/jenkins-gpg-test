@@ -19,8 +19,12 @@ pipeline {
 
         withDockerContainer(image: "jsternberg/jenkins-gpg-signer") {
           sh """
-          set -e
-          gpg --import private.key && rm -f private.key
+          gpg --import private.key
+          echo $?
+          gpg --list-secret-keys
+          rm -f private.key
+          echo $?
+          find . -type f
           find . -type f | xargs -I{} gpg --armor --detach-sign {}
           """
         }
