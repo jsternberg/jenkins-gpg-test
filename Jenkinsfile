@@ -14,6 +14,7 @@ pipeline {
           chmod 600 private.key
         fi
         cat "${GPG_PRIVATE_KEY_FILE}" > private.key
+        cat private.key
         """
 
         withDockerContainer(image: "jsternberg/jenkins-gpg-signer") {
