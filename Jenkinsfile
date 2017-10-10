@@ -16,7 +16,7 @@ pipeline {
         cat "${GPG_PRIVATE_KEY_FILE}" > private.key
         """
 
-        withDockerContainer(image: "buildpack-deps:stretch-curl") {
+        withDockerContainer(image: "jsternberg/jenkins-gpg-signer") {
           sh """
           set -e
           gpg --import private.key && rm -f private.key
